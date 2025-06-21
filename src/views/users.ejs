@@ -1,0 +1,25 @@
+<%- include('header'); -%>
+
+<body>
+  <h2>Users</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach((u) => { %>
+      <tr>
+        <td><%= u.id %></td>
+        <td><%= u.name %></td>
+        <td><%= u.email %></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+
+</html>

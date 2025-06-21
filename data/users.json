@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "name": "Bob Example",
+    "email": "bob@example.com"
+  },
+  {
+    "id": "2",
+    "name": "Daffy Duck",
+    "email": "d.duck@wb.com"
+  },
+  {
+    "id": "3",
+    "name": "Geddy Lee",
+    "email": "dirk@rush.com"
+  },
+  {
+    "id": "4",
+    "name": "Paul McCartney",
+    "email": "p.mccartney@beatles.com"
+  }
+]
