@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
-import { Blog } from 'src/types/blog';
+import { Blog, BlogContent } from 'src/model/blogs';
+
 
 // Dummy database. Replace with a real impl.
 
@@ -11,6 +12,16 @@ const getData = async (): Promise<Blog[]> => {
 export const getBlogs = async (): Promise<Blog[]> => {
   return await getData();
 };
+
+export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
+  const blog: Blog = {
+    ...blogContent, 
+    id: 1,
+    date: new Date(),
+  }
+  return blog;
+
+}
 
 // export const getUser = async (id: string): Promise<User | undefined> => {
 //   const users = await getData();

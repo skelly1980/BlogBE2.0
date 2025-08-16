@@ -8,5 +8,5 @@ export type BlogContent = {
 export type Blog = BlogContent & {
     id: number;
     tags?: string[];
-    date: string;
+    date: Date;
   }

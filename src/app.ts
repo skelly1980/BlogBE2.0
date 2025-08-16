@@ -8,6 +8,8 @@ import apiRouter from './routes/apiRouter';
 import viewRouter from './routes/viewRouter';
 import { ApiError } from './error/ApiError';
 
+// import { connectDB } from "./database/db";
+
 const BASE_API_PATH = '/api';
 
 export const app = express();
