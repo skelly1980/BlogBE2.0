@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import { Blog, BlogContent } from 'src/model/blogs';
-
+import mongoose from 'mongoose';
 
 // Dummy database. Replace with a real impl.
 
@@ -10,18 +10,25 @@ const getData = async (): Promise<Blog[]> => {
 };
 
 export const getBlogs = async (): Promise<Blog[]> => {
-  return await getData();
+  const collection = mongoose.connection.db?.collection('blog');
+
+  const blogs = await collection?.find<Blog>({}).toArray()
+  console.log(blogs);
+  return blogs ?? [];
 };
 
 export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
-  const blog: Blog = {
-    ...blogContent, 
-    id: 1,
+  const blog = {
+    ...blogContent,
     date: new Date(),
-  }
-  return blog;
+  };
 
-}
+  const collection = mongoose.connection.db?.collection('blog');
+
+  await collection?.insertOne(blog);
+
+  return {...blog, id:1};
+};
 
 // export const getUser = async (id: string): Promise<User | undefined> => {
 //   const users = await getData();
