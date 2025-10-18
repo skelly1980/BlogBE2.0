@@ -1,19 +1,31 @@
-import fs from 'fs/promises';
 import { Blog, BlogContent } from 'src/model/blogs';
 import mongoose from 'mongoose';
 
-// Dummy database. Replace with a real impl.
+type DbBlog = Omit<Blog, "id"> & {
+    _id: string;
+  }
 
-const getData = async (): Promise<Blog[]> => {
-  const data = await fs.readFile(`${process.cwd()}/data/blogs.json`, 'utf8');
-  return JSON.parse(data) as Blog[];
-};
+  const convertBlog = (dbBlog: DbBlog): Blog => {
+    return {
+      id: dbBlog._id,
+      tags: dbBlog.tags,
+      date: dbBlog.date,
+      title: dbBlog.title,
+      description: dbBlog.description,
+      content: dbBlog.content,
+      img: dbBlog.img,
+    }
+  }
 
 export const getBlogs = async (): Promise<Blog[]> => {
   const collection = mongoose.connection.db?.collection('blog');
 
-  const blogs = await collection?.find<Blog>({}).toArray()
-  console.log(blogs);
+  const dbBlogs = await collection?.find<DbBlog>({}).toArray()
+  
+  const blogs = dbBlogs?.map((blog) => {
+    return convertBlog(blog);
+  })
+
   return blogs ?? [];
 };
 
@@ -24,13 +36,12 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
   };
 
   const collection = mongoose.connection.db?.collection('blog');
-
-  await collection?.insertOne(blog);
-
-  return {...blog, id:1};
+  
+  try {
+    const res = await collection?.insertOne({...blog});
+    const id = res!.insertedId.toString();
+    return {...blog, id};
+  } catch (error) {
+    throw error
+  }
 };
-
-// export const getUser = async (id: string): Promise<User | undefined> => {
-//   const users = await getData();
-//   return users.find((u) => u.id === id);
-// };
