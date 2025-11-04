@@ -11,7 +11,7 @@ router.get('/', async (_req: Request, res: Response<Blog[]>) => {
 });
 
 //Blogs route
-router.put("/", async (req: Request<BlogContent>, res: Response<Blog>) => {  
+router.post("/", async (req: Request<BlogContent>, res: Response<Blog>) => {  
     const blogContent = req.body as BlogContent;
     const blog = await blogService.createBlog(blogContent);
     res.json(blog);
