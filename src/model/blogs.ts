@@ -1,12 +1,12 @@
-export type BlogContent = {
-    title: string;
-    description: string;
-    content: string;
-    img?: string;
+export interface BlogContent {
+  title: string;
+  description: string;
+  content: string;
+  img?: string;
 }
 
-export type Blog = BlogContent & {
-    id: string;
-    tags?: string[];
-    date: Date;
-  }
+export interface Blog extends BlogContent {
+  id: string;
+  tags?: string[];
+  date: Date;
+}

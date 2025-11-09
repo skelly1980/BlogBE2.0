@@ -1,7 +1,6 @@
 import { Blog, BlogContent } from 'src/model/blogs';
 import * as blogStore from '../database/blogStore';
 
-
 export const getBlogs = async (): Promise<Blog[]> => {
   return await blogStore.getBlogs();
 };

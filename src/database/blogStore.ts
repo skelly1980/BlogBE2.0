@@ -1,30 +1,26 @@
 import { Blog, BlogContent } from 'src/model/blogs';
 import mongoose from 'mongoose';
 
-type DbBlog = Omit<Blog, "id"> & {
-    _id: string;
-  }
+type DbBlog = Omit<Blog, 'id'> & { _id: string };
 
-  const convertBlog = (dbBlog: DbBlog): Blog => {
-    return {
-      id: dbBlog._id,
-      tags: dbBlog.tags,
-      date: dbBlog.date,
-      title: dbBlog.title,
-      description: dbBlog.description,
-      content: dbBlog.content,
-      img: dbBlog.img,
-    }
-  }
+const convertBlog = (dbBlog: DbBlog): Blog => {
+  return {
+    id: dbBlog._id,
+    tags: dbBlog.tags,
+    date: dbBlog.date,
+    title: dbBlog.title,
+    description: dbBlog.description,
+    content: dbBlog.content,
+    img: dbBlog.img,
+  };
+};
 
 export const getBlogs = async (): Promise<Blog[]> => {
   const collection = mongoose.connection.db?.collection('blog');
 
-  const dbBlogs = await collection?.find<DbBlog>({}).toArray()
-  
-  const blogs = dbBlogs?.map((blog) => {
-    return convertBlog(blog);
-  })
+  const dbBlogs = await collection?.find<DbBlog>({}).toArray();
+
+  const blogs = dbBlogs?.map((blog) => convertBlog(blog));
 
   return blogs ?? [];
 };
@@ -36,12 +32,9 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
   };
 
   const collection = mongoose.connection.db?.collection('blog');
-  
-  try {
-    const res = await collection?.insertOne({...blog});
-    const id = res!.insertedId.toString();
-    return {...blog, id};
-  } catch (error) {
-    throw error
-  }
+
+  const res = await collection?.insertOne({ ...blog });
+  const id = res!.insertedId.toString();
+
+  return { ...blog, id };
 };

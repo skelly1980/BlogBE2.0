@@ -9,44 +9,39 @@ const getData = async (): Promise<User[]> => {
   return JSON.parse(data) as User[];
 };
 
-type DbUser = Omit<User, "id"> & {
-    _id: string;
-  }
+type DbUser = Omit<User, 'id'> & {
+  _id: string;
+};
 
-  const convertUser = (dbUser: DbUser): User => {
-    return {
-      id: dbUser._id,
-      name: dbUser.name,
-      email: dbUser.email,
-      password: dbUser.password
-    }
-  }
-
+const convertUser = (dbUser: DbUser): User => {
+  return {
+    id: dbUser._id,
+    name: dbUser.name,
+    email: dbUser.email,
+    password: dbUser.password,
+  };
+};
 
 export const getUsers = async (): Promise<User[]> => {
-const collection = mongoose.connection.db?.collection('user');
+  const collection = mongoose.connection.db?.collection('user');
 
-  const dbUsers = await collection?.find<DbUser>({}).toArray()
-  
+  const dbUsers = await collection?.find<DbUser>({}).toArray();
+
   const users = dbUsers?.map((user) => {
     return convertUser(user);
-  })
+  });
 
   return users ?? [];
 };
 
-export const createUser = async (createUserRequest: CreateUserRequest): Promise<User> => {
-  
-    const collection = mongoose.connection.db?.collection('user');
-    
-    try {
-      const res = await collection?.insertOne({...createUserRequest});
-      const id = res!.insertedId.toString();
-      return {...createUserRequest, id};
-    } catch (error) {
-      throw error
-    }
-}
+export const createUser = async (
+  createUserRequest: CreateUserRequest,
+): Promise<User> => {
+  const collection = mongoose.connection.db?.collection('user');
+  const res = await collection?.insertOne({ ...createUserRequest });
+  const id = res!.insertedId.toString();
+  return { ...createUserRequest, id };
+};
 
 //Todo: Make this mongo
 export const getUser = async (id: string): Promise<User | undefined> => {
@@ -54,19 +49,21 @@ export const getUser = async (id: string): Promise<User | undefined> => {
   return users.find((u) => u.id === id);
 };
 
-
-export const authenticateUser = async (email: string, password: string): Promise<User | null> => {
+export const authenticateUser = async (
+  email: string,
+  password: string,
+): Promise<User | null> => {
   const collection = mongoose.connection.db?.collection('user');
-  const dbUser = await collection?.findOne<DbUser>({email: email});
+  const dbUser = await collection?.findOne<DbUser>({ email });
 
-  if(!dbUser) {
-    return null; 
+  if (!dbUser) {
+    throw new Error('User does not exist');
   }
 
- 
+  //Console log to check password error
   if (dbUser.password !== password) {
-    return null; 
+    throw new Error('Password does not exist');
   }
 
   return convertUser(dbUser);
-}
+};
