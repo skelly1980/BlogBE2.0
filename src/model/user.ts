@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export interface User {
   id: string;
@@ -18,24 +18,26 @@ export interface UserSignInInput {
   password: string;
 }
 
-const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const UserSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      unique: true,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true
+  {
+    timestamps: true,
   },
-  password: {
-    type: String,
-    required: true,
-    unique: true
-  }
-},
-{
-  timestamps: true
-});
+);
 
-export const UserModel = mongoose.model("Users", UserSchema);
+export const UserModel = mongoose.model('Users', UserSchema);

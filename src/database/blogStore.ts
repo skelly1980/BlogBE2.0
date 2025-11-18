@@ -38,3 +38,17 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
 
   return { ...blog, id };
 };
+
+export const deleteBlog = async (_id: string): Promise<boolean> => {
+  const collection = mongoose.connection.db?.collection('blog');
+
+  if (collection) {
+    try {
+      const res = await collection.deleteOne({ _id: Object });
+      return (res?.deletedCount ?? 0) > 0;
+    } catch (_err) {
+      return false;
+    }
+  }
+  return true;
+};

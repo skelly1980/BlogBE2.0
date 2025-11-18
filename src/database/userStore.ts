@@ -43,6 +43,21 @@ export const createUser = async (
   return { ...createUserRequest, id };
 };
 
+// export const deleteUser = async (id: string): Promise<boolean> => {
+//   const collection = mongoose.connection.db?.collection('user');
+
+//   if (collection) {
+//     try {
+//       const objectId = new mongoose.Types.ObjectId(id);
+//       const res = await collection.deleteOne({ _id: objectId });
+//       return (res?.deletedCount ?? 0) > 0;
+//     } catch (_err) {
+//       return false;
+//     }
+//   }
+//   return true;
+// };
+
 //Todo: Make this mongo
 export const getUser = async (id: string): Promise<User | undefined> => {
   const users = await getData();
