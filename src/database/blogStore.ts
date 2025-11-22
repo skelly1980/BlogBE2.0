@@ -39,12 +39,46 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
   return { ...blog, id };
 };
 
-export const deleteBlog = async (_id: string): Promise<boolean> => {
+// export const updateBlog = async (
+//   _id: string,
+//   blogContent: BlogContent,
+// ): Promise<Blog | null> => {
+//   const collection = mongoose.connection.db?.collection('blog');
+
+//   if (!collection) return null;
+
+//   try {
+//     const filter = { _id: new mongoose.Types.ObjectId(_id) };
+//     const update = { $set: { ...blogContent, date: new Date() } };
+//     const result = await collection.findOneAndUpdate(filter, update, {
+//       returnDocument: 'after',
+//     });
+//     const updated = result.value;
+//     if (!updated) return null;
+
+//     const dbBlog: DbBlog = {
+//       _id: updated._id.toString(),
+//       tags: updated.tags,
+//       date: updated.date,
+//       title: updated.title,
+//       description: updated.description,
+//       content: updated.content,
+//       img: updated.img,
+//     };
+
+//     return convertBlog(dbBlog);
+//   } catch (_error) {
+//     return null;
+//   }
+// };
+
+export const deleteBlog = async (id: string): Promise<boolean> => {
   const collection = mongoose.connection.db?.collection('blog');
 
   if (collection) {
     try {
-      const res = await collection.deleteOne({ _id: Object });
+      const objectId = new mongoose.mongo.ObjectId(id);
+      const res = await collection.deleteOne({ _id: objectId });
       return (res?.deletedCount ?? 0) > 0;
     } catch (_err) {
       return false;

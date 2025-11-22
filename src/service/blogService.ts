@@ -12,6 +12,3 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
 export const deleteBlog = async (id: string): Promise<boolean> => {
   return await blogStore.deleteBlog(id);
 };
-
-// export const getUser = async (id: string): Promise<User | undefined> => {
-//   return await userStore.getUser(id);
