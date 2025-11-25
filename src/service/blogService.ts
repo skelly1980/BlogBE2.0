@@ -12,3 +12,7 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
 export const deleteBlog = async (id: string): Promise<boolean> => {
   return await blogStore.deleteBlog(id);
 };
+
+// export const updateBlog = async (id: string): Promise<boolean> => {
+//   return await blogStore.updateBlog(id);
+// };

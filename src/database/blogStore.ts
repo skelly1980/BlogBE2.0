@@ -44,32 +44,6 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
 //   blogContent: BlogContent,
 // ): Promise<Blog | null> => {
 //   const collection = mongoose.connection.db?.collection('blog');
-
-//   if (!collection) return null;
-
-//   try {
-//     const filter = { _id: new mongoose.Types.ObjectId(_id) };
-//     const update = { $set: { ...blogContent, date: new Date() } };
-//     const result = await collection.findOneAndUpdate(filter, update, {
-//       returnDocument: 'after',
-//     });
-//     const updated = result.value;
-//     if (!updated) return null;
-
-//     const dbBlog: DbBlog = {
-//       _id: updated._id.toString(),
-//       tags: updated.tags,
-//       date: updated.date,
-//       title: updated.title,
-//       description: updated.description,
-//       content: updated.content,
-//       img: updated.img,
-//     };
-
-//     return convertBlog(dbBlog);
-//   } catch (_error) {
-//     return null;
-//   }
 // };
 
 export const deleteBlog = async (id: string): Promise<boolean> => {

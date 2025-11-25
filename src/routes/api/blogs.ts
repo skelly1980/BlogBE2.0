@@ -16,6 +16,16 @@ router.post('/', async (req: Request, res: Response) => {
   res.json(blog);
 });
 
+// Update Blog route
+// router.patch('/', async (req: Request, res: Response) => {
+//   const { id } = req.params;
+//   const updatedPost = await blogService.updateBlog(id);
+//   if (!updatedPost) {
+//     res.status(404).json({ message: 'Post not updated' });
+//   }
+//   res.status(200).send();
+// });
+
 // Delete blog route
 router.delete('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
