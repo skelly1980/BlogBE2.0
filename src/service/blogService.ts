@@ -13,6 +13,6 @@ export const deleteBlog = async (id: string): Promise<boolean> => {
   return await blogStore.deleteBlog(id);
 };
 
-// export const updateBlog = async (id: string): Promise<boolean> => {
-//   return await blogStore.updateBlog(id);
-// };
+export const updateBlog = async (id: string, blogContent: BlogContent): Promise<Blog | null> => {
+  return await blogStore.updateBlog(id, blogContent);
+};

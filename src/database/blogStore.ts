@@ -39,12 +39,31 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
   return { ...blog, id };
 };
 
-// export const updateBlog = async (
-//   _id: string,
-//   blogContent: BlogContent,
-// ): Promise<Blog | null> => {
-//   const collection = mongoose.connection.db?.collection('blog');
-// };
+export const updateBlog = async (
+  id: string,
+  blogContent: BlogContent,
+): Promise<Blog | null> => {
+  const collection = mongoose.connection.db?.collection('blog');
+  if (collection) {
+    try {
+      const objectId = new mongoose.Types.ObjectId(id);
+      const updated = {
+        ...blogContent,
+      };
+      const res = await collection.findOneAndUpdate(
+        { _id: objectId },
+        { $set: updated },
+        { returnDocument: 'after' },
+      );
+      return res
+        ? convertBlog({ ...res, _id: res._id.toString() } as DbBlog)
+        : null;
+    } catch (_err) {
+      return null;
+    }
+  }
+  return null;
+};
 
 export const deleteBlog = async (id: string): Promise<boolean> => {
   const collection = mongoose.connection.db?.collection('blog');

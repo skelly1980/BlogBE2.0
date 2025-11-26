@@ -17,14 +17,15 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // Update Blog route
-// router.patch('/', async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const updatedPost = await blogService.updateBlog(id);
-//   if (!updatedPost) {
-//     res.status(404).json({ message: 'Post not updated' });
-//   }
-//   res.status(200).send();
-// });
+router.patch('/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const blogblogContent = req.body as BlogContent;
+  const updatedPost = await blogService.updateBlog(id, blogblogContent);
+  if (!updatedPost) {
+    throw new Error(`No blog found for id ${id}`);
+  }
+  res.json(updatedPost);
+});
 
 // Delete blog route
 router.delete('/:id', async (req: Request, res: Response) => {
