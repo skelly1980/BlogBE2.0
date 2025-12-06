@@ -41,23 +41,19 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
 
 export const updateBlog = async (
   id: string,
-  blogContent: BlogContent,
+  blog: Blog,
 ): Promise<Blog | null> => {
   const collection = mongoose.connection.db?.collection('blog');
   if (collection) {
     try {
       const objectId = new mongoose.Types.ObjectId(id);
-      const updated = {
-        ...blogContent,
-      };
       const res = await collection.findOneAndUpdate(
         { _id: objectId },
-        { $set: updated },
+        { $set: blog },
         { returnDocument: 'after' },
       );
-      return res
-        ? convertBlog({ ...res, _id: res._id.toString() } as DbBlog)
-        : null;
+
+      return res ? convertBlog(res as unknown as DbBlog) : null;
     } catch (_err) {
       return null;
     }

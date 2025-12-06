@@ -19,8 +19,8 @@ router.post('/', async (req: Request, res: Response) => {
 // Update Blog route
 router.patch('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
-  const blogblogContent = req.body as BlogContent;
-  const updatedPost = await blogService.updateBlog(id, blogblogContent);
+  const blog = req.body as Blog;
+  const updatedPost = await blogService.updateBlog(id, blog);
   if (!updatedPost) {
     throw new Error(`No blog found for id ${id}`);
   }
