@@ -23,13 +23,17 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@types/multer": "^2.0.0",
+    "cloudinary": "^2.8.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "~5.1.0",
     "helmet": "^8.0.0",
     "mongoose": "^8.17.1",
-    "morgan": "~1.10.0"
+    "morgan": "~1.10.0",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
