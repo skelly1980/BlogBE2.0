@@ -41,15 +41,18 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
 
 export const updateBlog = async (
   id: string,
-  blog: Blog,
+  blogData: Partial<Blog>,
 ): Promise<Blog | null> => {
   const collection = mongoose.connection.db?.collection('blog');
   if (collection) {
     try {
       const objectId = new mongoose.Types.ObjectId(id);
+      const updateFields = { ...blogData };
+      delete updateFields.id;
+      delete updateFields.date;
       const res = await collection.findOneAndUpdate(
         { _id: objectId },
-        { $set: blog },
+        { $set: updateFields },
         { returnDocument: 'after' },
       );
 

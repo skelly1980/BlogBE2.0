@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import * as blogService from '../../service/blogService';
 import { Blog, BlogContent } from 'src/model/blogs';
 import { upload } from '../../service/upload';
+import cloudinary from '../../database/cloudinary';
+
 const router = express.Router();
 
 // get blogs
@@ -10,82 +12,76 @@ router.get('/', async (_req: Request, res: Response<Blog[]>) => {
   res.json(blogs);
 });
 
-//Create blog route
-// router.post('/', async (req: Request, res: Response) => {
-//   const blogContent = req.body as BlogContent;
-//   const blog = await blogService.createBlog(blogContent);
-//   res.json(blog);
-// });
-//Create blog route with image upload
+// Create blog route
 router.post(
   '/',
   upload.single('image'),
   async (req: Request, res: Response) => {
-    console.log('Received request body:', req.body);
-    console.log('Received file:', req.file);
+    const blogData = JSON.parse(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      (req.body.blogData as string) ?? '{}',
+    ) as BlogContent;
+    const imageFile = req.file;
 
-    let blogContent: BlogContent;
+    // Upload image to Cloudinary if file exists
+    if (imageFile) {
+      const cloudinaryResult = await cloudinary.uploader.upload(
+        `data:${imageFile.mimetype};base64,${imageFile.buffer.toString(
+          'base64',
+        )}`,
+        {
+          folder: 'blog-images',
+          transformation: {
+            width: 1200,
+            height: 630,
+            crop: 'fill',
+          },
+        },
+      );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (req.body.blogData) {
-      blogContent = JSON.parse(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        (req.body.blogData as string) ?? '{}',
-      ) as BlogContent;
-    } else {
-      blogContent = req.body as BlogContent;
+      blogData.img = cloudinaryResult.secure_url;
     }
 
-    if (req.file) {
-      const file = req.file as Express.Multer.File & {
-        path: string;
-        filename: string;
-      };
-      console.log('Cloudinary URL:', file.path);
-      blogContent.img = file.path;
-    }
-
-    const blog = await blogService.createBlog(blogContent);
+    const blog = await blogService.createBlog(blogData);
     res.json(blog);
   },
 );
 
-// Update Blog route
-// router.patch('/:id', async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const blog = req.body as Blog;
-//   const updatedPost = await blogService.updateBlog(id, blog);
-//   if (!updatedPost) {
-//     throw new Error(`No blog found for id ${id}`);
-//   }
-//   res.json(updatedPost);
-// });
-
-// Update blog route with optional new image
+// Update blog route
 router.patch(
   '/:id',
   upload.single('image'),
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    const blogContent = JSON.parse(
+    const blogData = JSON.parse(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (req.body.blogData as string) ?? '{}',
     ) as Blog;
+    const imageFile = req.file;
 
-    if (req.file) {
-      const file = req.file as Express.Multer.File & {
-        path: string;
-        filename: string;
-      };
-      blogContent.img = file.path;
+    // Upload new image to Cloudinary if file exists
+    if (imageFile) {
+      const cloudinaryResult = await cloudinary.uploader.upload(
+        `data:${imageFile.mimetype};base64,${imageFile.buffer.toString(
+          'base64',
+        )}`,
+        {
+          folder: 'blog-images',
+          transformation: {
+            width: 630,
+            height: 630,
+            crop: 'fill',
+          },
+        },
+      );
+
+      blogData.img = cloudinaryResult.secure_url;
     }
 
-    const updatedPost = await blogService.updateBlog(id, blogContent);
-
+    const updatedPost = await blogService.updateBlog(id, blogData);
     if (!updatedPost) {
       throw new Error(`No blog found for id ${id}`);
     }
-
     res.json(updatedPost);
   },
 );

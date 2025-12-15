@@ -15,7 +15,7 @@ export const deleteBlog = async (id: string): Promise<boolean> => {
 
 export const updateBlog = async (
   id: string,
-  blog: Blog,
+  blogData: Partial<Blog>,
 ): Promise<Blog | null> => {
-  return await blogStore.updateBlog(id, blog);
+  return await blogStore.updateBlog(id, blogData);
 };
