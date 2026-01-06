@@ -25,6 +25,21 @@ export const getBlogs = async (): Promise<Blog[]> => {
   return blogs ?? [];
 };
 
+export const getBlogById = async (id: string): Promise<Blog | null> => {
+  const collection = mongoose.connection.db?.collection('blog');
+
+  if (collection) {
+    try {
+      const oblectId = new mongoose.Types.ObjectId(id);
+      const dbBlog = await collection.findOne<DbBlog>({ _id: oblectId });
+      return dbBlog ? convertBlog(dbBlog) : null;
+    } catch (_errerror) {
+      return null;
+    }
+  }
+  return null;
+};
+
 export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
   const blog = {
     ...blogContent,

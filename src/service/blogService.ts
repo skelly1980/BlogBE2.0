@@ -5,6 +5,10 @@ export const getBlogs = async (): Promise<Blog[]> => {
   return await blogStore.getBlogs();
 };
 
+export const getBlogById = async (id: string): Promise<Blog | null> => {
+  return await blogStore.getBlogById(id);
+};
+
 export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
   return await blogStore.createBlog(blogContent);
 };

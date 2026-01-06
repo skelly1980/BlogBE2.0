@@ -12,6 +12,18 @@ router.get('/', async (_req: Request, res: Response<Blog[]>) => {
   res.json(blogs);
 });
 
+router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const blog = await blogService.getBlogById(id);
+
+  if (!blog) {
+    res.status(404).json({ message: 'Blog post not found' });
+    return;
+  }
+
+  res.json(blog);
+});
+
 // Create blog route
 router.post(
   '/',
@@ -59,7 +71,6 @@ router.patch(
     ) as Blog;
     const imageFile = req.file;
 
-    // Upload new image to Cloudinary if file exists
     if (imageFile) {
       const cloudinaryResult = await cloudinary.uploader.upload(
         `data:${imageFile.mimetype};base64,${imageFile.buffer.toString(
@@ -87,11 +98,12 @@ router.patch(
 );
 
 // Delete blog route
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const deletedPost = await blogService.deleteBlog(id);
   if (!deletedPost) {
     res.status(404).json({ message: 'Post not found' });
+    return;
   }
   res.status(200).send();
 });
