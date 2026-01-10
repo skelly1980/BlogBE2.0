@@ -3,6 +3,10 @@ import mongoose from 'mongoose';
 
 type DbBlog = Omit<Blog, 'id'> & { _id: string };
 
+const getDBCollection = () => {
+  return mongoose.connection.db?.collection('blog');
+};
+
 const convertBlog = (dbBlog: DbBlog): Blog => {
   return {
     id: dbBlog._id,
@@ -16,7 +20,7 @@ const convertBlog = (dbBlog: DbBlog): Blog => {
 };
 
 export const getBlogs = async (): Promise<Blog[]> => {
-  const collection = mongoose.connection.db?.collection('blog');
+  const collection = getDBCollection();
 
   const dbBlogs = await collection?.find<DbBlog>({}).toArray();
 
@@ -26,7 +30,7 @@ export const getBlogs = async (): Promise<Blog[]> => {
 };
 
 export const getBlogById = async (id: string): Promise<Blog | null> => {
-  const collection = mongoose.connection.db?.collection('blog');
+  const collection = getDBCollection();
 
   if (collection) {
     try {
@@ -46,7 +50,7 @@ export const createBlog = async (blogContent: BlogContent): Promise<Blog> => {
     date: new Date(),
   };
 
-  const collection = mongoose.connection.db?.collection('blog');
+  const collection = getDBCollection();
 
   const res = await collection?.insertOne({ ...blog });
   const id = res!.insertedId.toString();
@@ -58,7 +62,7 @@ export const updateBlog = async (
   id: string,
   blogData: Partial<Blog>,
 ): Promise<Blog | null> => {
-  const collection = mongoose.connection.db?.collection('blog');
+  const collection = getDBCollection();
   if (collection) {
     try {
       const objectId = new mongoose.Types.ObjectId(id);
@@ -80,7 +84,7 @@ export const updateBlog = async (
 };
 
 export const deleteBlog = async (id: string): Promise<boolean> => {
-  const collection = mongoose.connection.db?.collection('blog');
+  const collection = getDBCollection();
 
   if (collection) {
     try {
